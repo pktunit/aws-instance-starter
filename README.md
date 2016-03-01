@@ -20,7 +20,7 @@ This project displays a web page that reports the current status of your AWS ins
 
 1.Edit credentials.php and add your AWS access key and secret.
 
-2.Edit instances.php and add the instances. Group names must be unique.
+2.Edit instances.php and add the instances. Group names must be unique and cannot contain periods.
 
 ####License
 

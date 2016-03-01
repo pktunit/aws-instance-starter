@@ -1,12 +1,13 @@
 <?php
 require "instances.php";
 
-$instancesJson = json_encode($instances);
+$instancesJson = str_replace(" ", "_", json_encode($instances));
 $elements = count($instances);
 
 $main = "";
 foreach ($instances as $groupName => $instanceGroup) {
   $section = "";
+  $groupId = str_replace(" ", "_", $groupName);
   foreach ($instanceGroup as $instance) {
     if (isset($instance['url'])) {
       $serverName = "<a href=\"{$instance['url']}\" target=\"_blank\">{$instance['name']}</a>";
@@ -20,12 +21,12 @@ foreach ($instances as $groupName => $instanceGroup) {
     </div>
 EOHTML;
   }
-  $boxId = $groupName . "-box";
+  $boxId = $groupId . "-box";
   $main .=<<<EOHTML
   <div class="box" id="$boxId">
     <div class="box-title">$groupName</div>
-    <div class="box-content" id="$groupName">$section</div>
-    <div class="box-footer"><a href="#" type="submit" name="$groupName" id="$groupName" class="pure-button pure-button-disabled start-button">Start</a></div>
+    <div class="box-content" id="$groupId">$section</div>
+    <div class="box-footer"><a href="#" type="submit" name="$groupId" id="$groupId" class="pure-button pure-button-disabled start-button">Start</a></div>
   </div>
 EOHTML;
 }
@@ -45,7 +46,7 @@ echo <<<EOHTML
 <body>
   <div class="main">
     <div class="container">
-      $main
+$main
     </div>
   </div>
   <script src="/lib/jquery-2.1.4.min.js"></script>
@@ -55,7 +56,7 @@ var command = 'status';
 var instances = $instancesJson;
 var IDS = [];
 for (var g in instances) {
-  var group = instances[g]
+  var group = instances[g];
   for (var i in group) {
     var instance = group[i];
     IDS.push(instance['id']);
@@ -66,13 +67,11 @@ var draw = function(result) {
   var checked = [];
   result.forEach(function(server) {
     if (server[0]['State'] === "running") {
-      checked.push(server[0]['InstanceId']);
-      $('#' + server[0]['InstanceId']).removeClass().addClass('green').html(server[0]['State']);
+      $('#' + server[0]['InstanceId']).removeClass().addClass('green server-status').html(server[0]['State']);
     } else if (server[0]['State'] === "stopped") {
-      checked.push(server[0]['InstanceId']);
-      $('#' + server[0]['InstanceId']).removeClass().addClass('red').html(server[0]['State']);
+      $('#' + server[0]['InstanceId']).removeClass().addClass('red server-status').html(server[0]['State']);
     } else {
-      $('#' + server[0]['InstanceId']).removeClass().addClass('grey').html(server[0]['State']);
+      $('#' + server[0]['InstanceId']).removeClass().addClass('grey server-status').html(server[0]['State']);
     }
   });
 
@@ -104,7 +103,7 @@ var getServerStatus = function() {
       draw(result);
     },
     error: function(error) {
-      $('.server-status').removeClass('grey green').addClass('red').html('error - see console');
+      //$('.server-status').removeClass('grey green').addClass('red').html('error - see console');
       console.log(error);
     },
     timeout: 10000
