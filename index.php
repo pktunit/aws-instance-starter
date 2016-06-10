@@ -49,7 +49,7 @@ echo <<<EOHTML
 $main
     </div>
   </div>
-  <script src="/lib/jquery-2.1.4.min.js"></script>
+  <script src="//code.jquery.com/jquery-3.0.0.min.js"></script>
     
   <script>
 var command = 'status';
